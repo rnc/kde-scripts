@@ -16,10 +16,14 @@
 #      Enable send autodetected referrer URL and cookies.
 #
 
+echo "$@"
+
 session=$(qdbus org.kde.konsole /Konsole newSession)
 qdbus org.kde.konsole /Sessions/${session} setTitle 1 Download
-qdbus org.kde.konsole /Sessions/${session} sendText "echo Attempting to download $@"
+qdbus org.kde.konsole /Sessions/${session} sendText "echo Attempting to download $4"
 qdbus org.kde.konsole /Sessions/${session} sendText "
 "
 qdbus org.kde.konsole /Sessions/${session} sendText "aria2c --min-split-size=1M --max-connection-per-server=16 --split=25 --max-concurrent-downloads=25 --summary-interval=0 --truncate-console-readout=false --check-certificate=false --continue -d $1 --referer=\"$2\" --load-cookies=\"$3\" \"$4\"
+"
+qdbus org.kde.konsole /Sessions/${session} sendText "echo \"Press [Enter] key to exit...\" && read && exit
 "
