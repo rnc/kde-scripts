@@ -4,7 +4,10 @@
 # settings:
 #
 # Custom download manager pointing to this script with the following command line arguments:
-#   [FOLDER] [REFERER] [CFILE] [URL]
+#   Type [FOLDER] [REFERER] [CFILE] [URL]
+#
+# where type is either axel or aria2c
+#
 # FlashGot recommended settings:
 #   Enable the above download manager to be shown in the context menu.
 #   Menu:
@@ -18,12 +21,37 @@
 
 echo "$@"
 
-session=$(qdbus org.kde.konsole /Konsole newSession)
-qdbus org.kde.konsole /Sessions/${session} setTitle 1 Download
-qdbus org.kde.konsole /Sessions/${session} sendText "echo Attempting to download $4"
-qdbus org.kde.konsole /Sessions/${session} sendText "
+[[ "$1" = "axel" ]] && downloader=axel
+shift
+
+konsole=$(qdbus | grep konsole | sed 's/[^0-9]//g' | tail -1)
+if [ -z "$konsole" ]
+then
+    konsole=org.kde.konsole
+else
+    konsole=org.kde.konsole-$konsole
+fi
+
+session=$(qdbus ${konsole} /Konsole newSession)
+qdbus ${konsole} /Sessions/${session} setTitle 1 Download
+qdbus ${konsole} /Sessions/${session} sendText "echo Attempting to download $4"
+qdbus ${konsole} /Sessions/${session} sendText "
 "
-qdbus org.kde.konsole /Sessions/${session} sendText "aria2c --min-split-size=1M --max-connection-per-server=16 --split=25 --max-concurrent-downloads=25 --summary-interval=0 --truncate-console-readout=false --check-certificate=false --continue -d $1 --referer=\"$2\" --load-cookies=\"$3\" \"$4\"
+
+if [ "$downloader" = "axel" ]
+then
+    qdbus ${konsole} /Sessions/${session} sendText "echo Downloading using axel"
+    qdbus ${konsole} /Sessions/${session} sendText "
 "
-qdbus org.kde.konsole /Sessions/${session} sendText "echo \"Press [Enter] key to exit...\" && read && exit
+    qdbus ${konsole} /Sessions/${session} sendText "axel --num-connections=25 --alternate --output=\"$1\"/`basename \"$4\"` \"$4\"
+"
+else
+    qdbus ${konsole} /Sessions/${session} sendText "echo Downloading using aria2c"
+    qdbus ${konsole} /Sessions/${session} sendText "
+"
+    qdbus ${konsole} /Sessions/${session} sendText "aria2c --min-split-size=1M --max-connection-per-server=16 --split=25 --max-concurrent-downloads=25 --summary-interval=0 --truncate-console-readout=false --check-certificate=false --continue -d $1 --referer=\"$2\" --load-cookies=\"$3\" \"$4\"
+"
+fi
+
+qdbus ${konsole} /Sessions/${session} sendText "echo \"Press [Enter] key to exit...\" && read && exit
 "
