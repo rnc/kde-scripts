@@ -11,5 +11,5 @@ VPN=`ip link show up | grep tun`
 
 if [ -n "$VPN" ]
 then
-    $HOME/bin/kerberosKWallet.sh
+    `dirname $0`/kerberosKWallet.sh
 fi
