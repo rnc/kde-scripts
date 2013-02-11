@@ -1,0 +1,64 @@
+#
+# Yasp configuration script (http://kde-look.org/content/show.php?content=109367)
+#
+#
+# Validated against KDE 4.9.5
+# Requires lm_sensors to be installed (tested against 3.3.2)
+# Uses Oxygen 64.x64 icons.
+
+default title:color="white" title:font="Dejavu Sans, 10" title:shadow="Sunken" title:alignment="Center"
+default value:color="gray" value:font="Dejavu Sans, 8" value:alignment="Left"
+
+title text="Excalibur"
+default interval="single"
+default interval="120000"
+sensor name="LSBVersion" type="program" cmd="lsb_release -idrc | grep Description | sed 's/Description:\t//g' "$
+sensor name="KernelVersion" type="program" cmd="uname -r"
+sensor name="KdeVersion" type="program" cmd=$kde4-config --version | grep KDE | sed -e "s/KDE Development Platform: \([0-9.]*\).*/\1/"$
+value icon="oxygen/64x64/places/start-here-kde.png" iconsize="32" key=" "  use="LSBVersion" use="KernelVersion" use="KdeVersion" format="$1\nKernel\t$2\nKde\t$3"
+
+
+sensor name="UptimeSecs" type="engine" cmd="systemmonitor:system/uptime:value"
+sensor name="UptimeDays" type="math" use="UptimeSecs" math="int $1 86400 /"
+sensor name="UptimeHours" type="math" use="UptimeSecs" use="UptimeDays" math="int $1 86400 $2 * - 3600 /"
+sensor name="UptimeMinutes" type="math" use="UptimeSecs" use="UptimeDays" use="UptimeHours" math="int $1 86400 $2 * - 3600 $3 * - 60 /"
+value key="Uptime" use="UptimeDays" use="UptimeHours" use="UptimeMinutes" format="$1 day(s) $2 h $3 m"
+
+
+title text="CPU and Memory"
+default interval="5000"
+sensor name="Fan" type="program" cmd="sensors | awk '/fan1/ {print $2}'"
+sensor name="Cpu0Load" type="engine" cmd="systemmonitor:cpu/cpu0/TotalLoad:value" math="int $0"
+sensor name="Cpu1Load" type="engine" cmd="systemmonitor:cpu/cpu1/TotalLoad:value" math="int $0"
+sensor name="Cpu0Load" type="engine" cmd="systemmonitor:cpu/cpu3/TotalLoad:value" math="int $0"
+sensor name="Cpu1Load" type="engine" cmd="systemmonitor:cpu/cpu4/TotalLoad:value" math="int $0"
+sensor name="Temp" type="program" cmd=%sensors | awk '/Physical id 0/ {print $4}'%
+value icon="oxygen/64x64/categories/applications-utilities.png" key=" "  use="Fan" use="Temp" format="Fan $1 RPM; Physical temp: $2"
+sensor name="Core0Temp" type="program" cmd=%sensors | awk '/Core\ 0/ {print $3}'%
+sensor name="Core1Temp" type="program" cmd=%sensors | awk '/Core\ 1/ {print $3}'%
+value icon="oxygen/64x64/devices/cpu.png" key=" "  use="Core0Temp" use="Cpu0Load" format="Temp: $1 Load: $2%"
+plotter use="Cpu0Load" plot="$1" color="red" min="0" max="100" height="50"
+value icon="oxygen/64x64/devices/cpu.png" key=" " use="Core1Temp" use="Cpu1Load" format="Temp: $1 Load: $2%"
+plotter use="Cpu1Load" plot="$1" color="red" min="0" max="100" height="50"
+
+# Memory Graph
+sensor name="RamUsed" type="engine" cmd="systemmonitor:mem/physical/application:value" math="int $0 1024 /"
+sensor name="RamTotal" type="engine" cmd="systemmonitor:mem/physical/used:max" math="int $0 1024 /" interval="single"
+sensor name="SwapUsed" type="engine" cmd="systemmonitor:mem/swap/used:value" math="int $0 1024 /"
+sensor name="SwapTotal" type="engine" cmd="systemmonitor:mem/swap/used:max" math="int $0 1024 /" interval="single"
+
+
+value alignment="Left" key="" use="RamUsed"  use="RamTotal" use="SwapUsed" use="SwapTotal"  format="Ram Usage\t$1 MB / $2 MB \nSwap Usage\t$3 MB / $4 MB"
+#value key="Ram Usage" use="RamUsed" use="RamTotal" format="$1 MB / $2 MB"
+#value key="Swap Usage" use="SwapUsed" use="SwapTotal" format="$1 MB / $2 MB"
+plotter use="RamUsed" use="SwapUsed" use="RamTotal" plot="$1" color="red" plot="$2" color="green" min="0" max="8095" height="50"
+
+#plotter use="SwapMbUsed" plot="$1" color="red" min="0" max="4095" height="50"
+#meter use="SwapMbUsed" min="20" max="100" value="$1"
+
+
+title text="HardDisk"
+default interval="3600000"
+sensor name="HomeUsed" type="engine" cmd="systemmonitor:partitions/home/usedspace:value" math="int $0 1048576 /"
+sensor name="HomeTotal" use="HomeUsed" type="engine" cmd="systemmonitor:partitions/home/freespace:value" math="int $0 1048576 / $1 +"
+meter use="HomeUsed" use="HomeTotal" label:0="Home" label:1="$1 GB / $2 GB" alignment:1="right" min="0" max="$2" value="$1"

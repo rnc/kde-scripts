@@ -1,7 +1,7 @@
 Utility KDE Scripts
 ===================
 
-This project contains my KDE scripts that I use to integrate KWallet with SSH and Kerberos automatically. They have been tested on KDE 4.7.4 on Fedora F16.
+This project contains various KDE scripts. They are for integrating KWallet with SSH and Kerberos automatically, to integrate Firefox downloads with Konsole and a configuration file for Yasp (http://kde-look.org/content/show.php?content=109367). They have been tested on KDE 4.7.4 on Fedora F16 and KDE 4.9.5 on Fedora F18.
 
 Installation
 ------------
@@ -17,3 +17,5 @@ Installation
 * The _kerberosKWallet.sh_ script provides integration between KWallet and Kerberos (specifically /usr/bin/kinit). It can be used to automatically 'obtain and cache Kerberos ticket-granting ticket' using passwords from KWallet. The path in KDE Wallet Manager is `Passwords/KerberosWallet`. (Note: You **may** have to create the KerberosWallet entry). Either place this inside `$HOME/.kde4/Autostart` or utilise _networkPostConfig.sh_ script as described above. This script should automatically ask for the password and if it does not already exist it will write one to that entry. Finally, it will call kinit with the password.
 
 * The _konsoleDownload.sh_ script provides integration between Firefox using the FlashGot downloader and axel/aria2c to open up a new tab in a konsole session. This allows axel/aria2c to perform the downloads (which are much quicker) rather than the Firefox internal mechanism.
+
+* The _.yasp\_script_ is a configuration file for the Yasp plasma applet.
