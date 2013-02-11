@@ -6,9 +6,12 @@
 # Requires lm_sensors to be installed (tested against 3.3.2)
 # Uses Oxygen 64.x64 icons.
 
+
+# Defaults
 default title:color="white" title:font="Dejavu Sans, 10" title:shadow="Sunken" title:alignment="Center"
 default value:color="gray" value:font="Dejavu Sans, 8" value:alignment="Left"
 
+# General Info.
 title text="Excalibur"
 default interval="single"
 default interval="120000"
@@ -24,7 +27,7 @@ sensor name="UptimeHours" type="math" use="UptimeSecs" use="UptimeDays" math="in
 sensor name="UptimeMinutes" type="math" use="UptimeSecs" use="UptimeDays" use="UptimeHours" math="int $1 86400 $2 * - 3600 $3 * - 60 /"
 value key="Uptime" use="UptimeDays" use="UptimeHours" use="UptimeMinutes" format="$1 day(s) $2 h $3 m"
 
-
+# CPU and Memory
 title text="CPU and Memory"
 default interval="5000"
 sensor name="Fan" type="program" cmd="sensors | awk '/fan1/ {print $2}'"
@@ -46,17 +49,10 @@ sensor name="RamUsed" type="engine" cmd="systemmonitor:mem/physical/application:
 sensor name="RamTotal" type="engine" cmd="systemmonitor:mem/physical/used:max" math="int $0 1024 /" interval="single"
 sensor name="SwapUsed" type="engine" cmd="systemmonitor:mem/swap/used:value" math="int $0 1024 /"
 sensor name="SwapTotal" type="engine" cmd="systemmonitor:mem/swap/used:max" math="int $0 1024 /" interval="single"
-
-
 value alignment="Left" key="" use="RamUsed"  use="RamTotal" use="SwapUsed" use="SwapTotal"  format="Ram Usage\t$1 MB / $2 MB \nSwap Usage\t$3 MB / $4 MB"
-#value key="Ram Usage" use="RamUsed" use="RamTotal" format="$1 MB / $2 MB"
-#value key="Swap Usage" use="SwapUsed" use="SwapTotal" format="$1 MB / $2 MB"
 plotter use="RamUsed" use="SwapUsed" use="RamTotal" plot="$1" color="red" plot="$2" color="green" min="0" max="8095" height="50"
 
-#plotter use="SwapMbUsed" plot="$1" color="red" min="0" max="4095" height="50"
-#meter use="SwapMbUsed" min="20" max="100" value="$1"
-
-
+# Hard Disk Usage
 title text="HardDisk"
 default interval="3600000"
 sensor name="HomeUsed" type="engine" cmd="systemmonitor:partitions/home/usedspace:value" math="int $0 1048576 /"
