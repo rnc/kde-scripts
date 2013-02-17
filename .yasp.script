@@ -45,7 +45,7 @@ value icon="oxygen/64x64/devices/cpu.png" key=" " use="Core1Temp" use="Cpu1Load"
 plotter use="Cpu1Load" plot="$1" color="red" min="0" max="100" height="50"
 
 # Memory Graph
-sensor name="RamUsed" type="engine" cmd="systemmonitor:mem/physical/application:value" math="int $0 1024 /"
+sensor name="RamUsed" type="engine" cmd="systemmonitor:mem/physical/used:value" math="int $0 1024 /"
 sensor name="RamTotal" type="engine" cmd="systemmonitor:mem/physical/used:max" math="int $0 1024 /" interval="single"
 sensor name="SwapUsed" type="engine" cmd="systemmonitor:mem/swap/used:value" math="int $0 1024 /"
 sensor name="SwapTotal" type="engine" cmd="systemmonitor:mem/swap/used:max" math="int $0 1024 /" interval="single"
