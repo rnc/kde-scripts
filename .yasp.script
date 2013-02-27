@@ -3,7 +3,7 @@
 #
 #
 # Validated against KDE 4.9.5
-# Requires lm_sensors to be installed (tested against 3.3.2)
+# Requires lm_sensors to be installed (tested against 3.3.2) and lsb_release.
 # Uses Oxygen 64.x64 icons.
 
 
