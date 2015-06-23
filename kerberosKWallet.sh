@@ -15,9 +15,16 @@
 # http://learnonthejob.blogspot.com/2009/11/accessing-kde-wallet-from-cmdline.html
 #
 
+if [ "$KDE_SESSION_VERSION" = 5 ]
+then
+    KWALLETD=kwalletd5
+else
+    KWALLETD=kwalletd
+fi
+
 KEY=KerberosWallet
-WALLETID=$(qdbus org.kde.kwalletd /modules/kwalletd org.kde.KWallet.open kdewallet 0 $KEY)
-PASSWORD=$(qdbus org.kde.kwalletd /modules/kwalletd readPassword $WALLETID Passwords $KEY $KEY)
+WALLETID=$(qdbus org.kde.$KWALLETD /modules/$KWALLETD org.kde.KWallet.open kdewallet 0 $KEY)
+PASSWORD=$(qdbus org.kde.$KWALLETD /modules/$KWALLETD readPassword $WALLETID Passwords $KEY $KEY)
 #By default assume that the password was fetched from KDE Wallet
 PASSWORD_FETCHED=-1
 
@@ -50,7 +57,7 @@ then
         kdialog --error "Blank password; unable to run kinit"
         exit 1
     elif [ "$PASSWORD_FETCHED" != "-1" ]; then
-        qdbus org.kde.kwalletd /modules/kwalletd writePassword $WALLETID Passwords $KEY $PASSWORD $KEY
+        qdbus org.kde.$KWALLETD /modules/$KWALLETD writePassword $WALLETID Passwords $KEY $PASSWORD $KEY
         if [ $? = 1 ]
         then
             kdialog --error "Failed to write password"
