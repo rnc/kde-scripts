@@ -1,0 +1,5 @@
+[Desktop Entry]
+Name=SSH Add
+Exec=$HOME/kde-scripts/addSSHKeys.sh
+Type=Application
+Terminal=False
