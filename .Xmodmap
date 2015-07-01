@@ -8,12 +8,3 @@
 clear Lock
 keycode 66 = Control_L Caps_Lock Caps_Lock Caps_Lock
 add Control = Control_L
-
-!keysym Caps_Lock = Control_L Control_L Caps_Lock Caps_Lock
-
-! Put caps lock somewhere else
-!keysym Scroll_Lock = Caps_Lock
-!add Lock = Caps_Lock
-! add Lock = Caps_Lock
-! Setup Windows key to be F13
-! keycode 133=F13
