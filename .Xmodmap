@@ -1,0 +1,19 @@
+!
+! Some useful references:
+!
+! xev | grep -A2 --line-buffered '^KeyRelease' | sed -n '/keycode /s/^.*keycode \([0-9]*\).* (.*, \(.*\)).*$/\1 \2/p'
+!
+
+! Caps_lock is activated through Shift. Otherwise functions as Control.
+clear Lock
+keycode 66 = Control_L Caps_Lock Caps_Lock Caps_Lock
+add Control = Control_L
+
+!keysym Caps_Lock = Control_L Control_L Caps_Lock Caps_Lock
+
+! Put caps lock somewhere else
+!keysym Scroll_Lock = Caps_Lock
+!add Lock = Caps_Lock
+! add Lock = Caps_Lock
+! Setup Windows key to be F13
+! keycode 133=F13

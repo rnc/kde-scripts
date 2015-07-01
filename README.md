@@ -21,3 +21,7 @@ Installation
 * The _.yasp\_script_ is a configuration file for the Yasp plasma applet.
 
 * The _logitech.sh_ is a configuration file to reset a Logitech mouse buttons.
+
+* The _.Xmodmap_ is a configuration file for keybindings to reset the Caps Lock key so it behaves as follows:
+    * Functions as Control key normally.
+    * With Shift functions as Caps Lock.
