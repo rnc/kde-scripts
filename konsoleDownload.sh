@@ -31,8 +31,10 @@ then
 else
     konsole=org.kde.konsole-$konsole
 fi
+window=`qdbus org.kde.konsole-1910 | grep "Windows/" | sed -E 's/.*([0-9])/\1/g'`
 
-session=$(qdbus ${konsole} /Konsole newSession)
+
+session=$(qdbus ${konsole} /Windows/$window newSession)
 qdbus ${konsole} /Sessions/${session} setTitle 1 Download
 qdbus ${konsole} /Sessions/${session} sendText "echo Attempting to download $4"
 qdbus ${konsole} /Sessions/${session} sendText "
