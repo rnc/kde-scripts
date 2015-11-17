@@ -4,7 +4,7 @@
 notify-send -u critical -t 5000 -i 'security-low' 'KRunner' '<b>Restarting KRunner...</b>'
 
 kquitapp krunner && kstart krunner
-while [ -z $(pidof krunner) ]
+while [ -z "$(pidof krunner)" ]
 do
     sleep 1
 done
@@ -16,7 +16,7 @@ notify-send -u critical -t 5000 -i 'security-low' 'Plasma' '<b>Restarting Plasma
 sleep 2
 
 kbuildsycoca5 && kquitapp plasmashell && kstart plasmashell
-while [ -z $(pidof plasmashell) ]
+while [ -z "$(pidof plasmashell)" ]
 do
     sleep 1
 done

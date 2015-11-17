@@ -12,4 +12,6 @@ VPN=`ip link show up | grep tun`
 if [ -n "$VPN" ]
 then
     $(cd -P $(dirname $0) && pwd)/kerberosKWallet.sh
+
+    notify-send -u normal -t 2000 -i 'network-vpn' 'Plasma' '<b>Finished configuring Kerberos.</b>'
 fi
