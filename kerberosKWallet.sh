@@ -15,7 +15,7 @@
 # http://learnonthejob.blogspot.com/2009/11/accessing-kde-wallet-from-cmdline.html
 #
 
-if [ "$KDE_SESSION_VERSION" = 5 ]
+if [ "$KDE_SESSION_VERSION" = 5 ] || [ -n "`ps -u$USER | grep kwalletd5`" ]
 then
     KWALLETD=kwalletd5
 else
