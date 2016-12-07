@@ -12,15 +12,20 @@ then
     exit 1
 fi
 
-UUIDS=`nmcli con show | grep OpenVPN | tr -s ' ' | cut -d' ' -f 4`
+UUIDS=`nmcli -t -f uuid,type con show | grep vpn | cut -d ":" -f1`
 
-echo "Parsing `nmcli con show`"
+echo -e "Parsing\n`nmcli con show`"
 echo -e "\nFound connection information of\n$UUIDS"
 
 for i in `echo $UUIDS`
 do
-    nmcli con modify $i +vpn.data username=$1
-    echo -e "Modifying for $i vpn.data \n`nmcli con show $i | grep vpn.data | sed 's/vpn.data:                               / /g' | tr ',' '\n'`"
+    if [ -n "`nmcli con show $i | grep vpn.data | grep redhat.com`" ]
+    then
+        nmcli con modify $i +vpn.data username=$1
+        echo -e "Modifying for $i vpn.data \n`nmcli con show $i | grep vpn.data | sed 's/vpn.data:                               / /g' | tr ',' '\n'`"
+    else
+        echo "Ignoring connection $i"
+    fi
 done
 
 echo "Reloading connection information..."
