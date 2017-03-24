@@ -22,6 +22,8 @@ else
     KWALLETD=kwalletd
 fi
 
+export $(dbus-launch)
+
 KEY=KerberosWallet
 WALLETID=$(qdbus org.kde.$KWALLETD /modules/$KWALLETD org.kde.KWallet.open kdewallet 0 $KEY)
 PASSWORD=$(qdbus org.kde.$KWALLETD /modules/$KWALLETD readPassword $WALLETID Passwords $KEY $KEY)
@@ -63,7 +65,7 @@ then
             kdialog --error "Failed to write password"
         fi
     fi
-    kinit -A $USER <<EOF 3>&1 1>&2 2>&3 | checkKinit
+    kinit -A $USER &> /dev/null <<EOF 3>&1 1>&2 2>&3 | checkKinit
 $PASSWORD
 EOF
 fi
