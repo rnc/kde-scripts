@@ -22,22 +22,33 @@ else
     KWALLETD=kwalletd
 fi
 
+# Is this needed?!
 export $(dbus-launch)
 
 KEY=KerberosWallet
 WALLETID=$(qdbus org.kde.$KWALLETD /modules/$KWALLETD org.kde.KWallet.open kdewallet 0 $KEY)
+if [ "$?" != 0 ]
+then
+    kdialog --error "Timed out retrieving password ; rerun $0"
+    exit 1
+fi
 PASSWORD=$(qdbus org.kde.$KWALLETD /modules/$KWALLETD readPassword $WALLETID Passwords $KEY $KEY)
 #By default assume that the password was fetched from KDE Wallet
 PASSWORD_FETCHED=-1
 
 if [ -f $HOME/.kerberoskwallet ]
 then
-    USER=`cat $HOME/.kerberoskwallet | grep USER | sed 's/.*=//' | tr -d '[:blank:]'`
+    KUSER=$(grep USER $HOME/.kerberoskwallet | sed 's/.*=//' | tr -d '[:blank:]')
 fi
 
 if [ -z "$PASSWORD" ]; then
     PASSWORD=$(kdialog --title "Kerberos Password" --password "Please enter passphrase for kinit")
     PASSWORD_FETCHED=$?
+fi
+if ! grep -q "default_ccache_name" /etc/krb5.conf
+then
+    # Force location on machines without persistent cache for Kerberos cache. Useful to workaround problems with puddle generation.
+    KRB5CCNAME=/tmp/"$USER"_ccache
 fi
 
 checkKinit()
@@ -65,7 +76,7 @@ then
             kdialog --error "Failed to write password"
         fi
     fi
-    kinit -A $USER &> /dev/null <<EOF 3>&1 1>&2 2>&3 | checkKinit
+    kinit -A "$KUSER" &> /dev/null <<EOF 3>&1 1>&2 2>&3 | checkKinit
 $PASSWORD
 EOF
 fi

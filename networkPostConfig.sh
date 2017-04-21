@@ -9,22 +9,31 @@
 # VPN device comes on on type 'tun'
 VPN=`ip link show up | grep tun`
 
-echo "Called with \"$1\" \"$2\" for \"$VPN\"" > /tmp/vpn.log
+echo "On `date` called as user $USER with display $DISPLAY with parameters \"$1\" \"$2\" for \"$VPN\"" > /tmp/vpn.log
+
+if [ -z "$VPN" ]
+then
+    sleep 5
+    VPN=`ip link show up | grep tun`
+    echo "Calling again with \"$1\" \"$2\" for \"$VPN\"" >> /tmp/vpn.log
+fi
 
 # Only do this if we have a VPN connection and we are not deactivating networks.
 if [ -n "$VPN" ] && [ "$2" != "down" ]
 then
+    # Any other post-configuration setup
+    echo "Performing mouse and keyboard setup..." >> /tmp/vpn.log
+    $(dirname "$(readlink -f "$0")")/logitech.sh
+    xmodmap /home/$USER/.Xmodmap
+
     # Check if we already have a kerberos ticket ; don't reinit if we do.
-    klist -s
-    if [ "$?" == "0" ]
+    echo "Performing kerberos setup..." >> /tmp/vpn.log
+    if klist -s
     then
         /bin/notify-send -u normal -t 2000 -i 'network-vpn' 'Plasma' '<b>Kerberos already configured.</b>'
     else
+        echo "Configuring kerberos..." >> /tmp/vpn.log
         $(dirname "$(readlink -f "$0")")/kerberosKWallet.sh
         /bin/notify-send -u normal -t 2000 -i 'network-vpn' 'Plasma' '<b>Finished configuring Kerberos.</b>'
     fi
-
-    # Any other post-configuration setup
-    $(dirname "$(readlink -f "$0")")/logitech.sh
-    xmodmap /home/$USER/.Xmodmap
 fi
