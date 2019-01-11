@@ -15,24 +15,20 @@
 # http://learnonthejob.blogspot.com/2009/11/accessing-kde-wallet-from-cmdline.html
 #
 
-if [ "$KDE_SESSION_VERSION" = 5 ] || [ -n "`ps -u$USER | grep kwalletd5`" ]
-then
-    KWALLETD=kwalletd5
-else
-    KWALLETD=kwalletd
-fi
+echo "Running kerberosKWallet" >> /tmp/vpn.log
 
 # Is this needed?!
 export $(dbus-launch)
 
 KEY=KerberosWallet
-WALLETID=$(qdbus org.kde.$KWALLETD /modules/$KWALLETD org.kde.KWallet.open kdewallet 0 $KEY)
+WALLETID=$(qdbus-qt5 org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 $KEY)
 if [ "$?" != 0 ]
 then
     kdialog --error "Timed out retrieving password ; rerun $0"
     exit 1
 fi
-PASSWORD=$(qdbus org.kde.$KWALLETD /modules/$KWALLETD readPassword $WALLETID Passwords $KEY $KEY)
+echo "Attempting to read wallet password with \"qdbus-qt5 org.kde.kwalletd5 /modules/kwalletd5 readPassword $WALLETID Passwords $KEY $KEY\"" >> /tmp/vpn.log
+PASSWORD=$(qdbus-qt5 org.kde.kwalletd5 /modules/kwalletd5 readPassword $WALLETID Passwords $KEY $KEY)
 #By default assume that the password was fetched from KDE Wallet
 PASSWORD_FETCHED=-1
 
@@ -70,7 +66,7 @@ then
         kdialog --error "Blank password; unable to run kinit"
         exit 1
     elif [ "$PASSWORD_FETCHED" != "-1" ]; then
-        qdbus org.kde.$KWALLETD /modules/$KWALLETD writePassword $WALLETID Passwords $KEY $PASSWORD $KEY
+        qdbus-qt5 org.kde.kwalletd5 /modules/kwalletd5 writePassword $WALLETID Passwords $KEY $PASSWORD $KEY
         if [ $? = 1 ]
         then
             kdialog --error "Failed to write password"

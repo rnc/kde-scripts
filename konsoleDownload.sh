@@ -24,36 +24,36 @@ echo "$@"
 [[ "$1" = "axel" ]] && downloader=axel
 shift
 
-konsole=$(qdbus | grep konsole | sed 's/[^0-9]//g' | tail -1)
+konsole=$(qdbus-qt5 | grep konsole | sed 's/[^0-9]//g' | tail -1)
 if [ -z "$konsole" ]
 then
     konsole=org.kde.konsole
 else
     konsole=org.kde.konsole-$konsole
 fi
-window=`qdbus org.kde.konsole-1910 | grep "Windows/" | sed -E 's/.*([0-9])/\1/g'`
+window=`qdbus-qt5 org.kde.konsole-1910 | grep "Windows/" | sed -E 's/.*([0-9])/\1/g'`
 
 
-session=$(qdbus ${konsole} /Windows/$window newSession)
-qdbus ${konsole} /Sessions/${session} setTitle 1 Download
-qdbus ${konsole} /Sessions/${session} sendText "echo Attempting to download $4"
-qdbus ${konsole} /Sessions/${session} sendText "
+session=$(qdbus-qt5 ${konsole} /Windows/$window newSession)
+qdbus-qt5 ${konsole} /Sessions/${session} setTitle 1 Download
+qdbus-qt5 ${konsole} /Sessions/${session} sendText "echo Attempting to download $4"
+qdbus-qt5 ${konsole} /Sessions/${session} sendText "
 "
 
 if [ "$downloader" = "axel" ]
 then
-    qdbus ${konsole} /Sessions/${session} sendText "echo Downloading using axel"
-    qdbus ${konsole} /Sessions/${session} sendText "
+    qdbus-qt5 ${konsole} /Sessions/${session} sendText "echo Downloading using axel"
+    qdbus-qt5 ${konsole} /Sessions/${session} sendText "
 "
-    qdbus ${konsole} /Sessions/${session} sendText "axel --num-connections=25 --alternate --output=\"$1\"/`basename \"$4\"` \"$4\"
+    qdbus-qt5 ${konsole} /Sessions/${session} sendText "axel --num-connections=25 --alternate --output=\"$1\"/`basename \"$4\"` \"$4\"
 "
 else
-    qdbus ${konsole} /Sessions/${session} sendText "echo Downloading using aria2c"
-    qdbus ${konsole} /Sessions/${session} sendText "
+    qdbus-qt5 ${konsole} /Sessions/${session} sendText "echo Downloading using aria2c"
+    qdbus-qt5 ${konsole} /Sessions/${session} sendText "
 "
-    qdbus ${konsole} /Sessions/${session} sendText "aria2c --min-split-size=1M --max-connection-per-server=16 --split=25 --max-concurrent-downloads=25 --summary-interval=0 --truncate-console-readout=false --check-certificate=false --continue -d $1 --referer=\"$2\" --load-cookies=\"$3\" \"$4\"
+    qdbus-qt5 ${konsole} /Sessions/${session} sendText "aria2c --min-split-size=1M --max-connection-per-server=16 --split=25 --max-concurrent-downloads=25 --summary-interval=0 --truncate-console-readout=false --check-certificate=false --continue -d $1 --referer=\"$2\" --load-cookies=\"$3\" \"$4\"
 "
 fi
 
-qdbus ${konsole} /Sessions/${session} sendText "echo \"Press [Enter] key to exit...\" && read && exit
+qdbus-qt5 ${konsole} /Sessions/${session} sendText "echo \"Press [Enter] key to exit...\" && read && exit
 "
