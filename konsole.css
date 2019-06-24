@@ -1,0 +1,18 @@
+
+QTabBar::tab
+{
+    font: 8pt;
+    height: 15px;
+    padding: 5px;
+    border: 0px;
+    min-width: 100px
+}
+
+QTabBar::tab:selected
+{
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #1e5799, stop: 0.01 #2989d8, stop: 0.11 rgb(45, 45, 45));
+
+    color: #4F89CC;
+
+    background-color: rgb(45, 45, 45);
+}
