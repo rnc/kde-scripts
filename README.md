@@ -23,3 +23,5 @@ Previously this could have also been setup from using `NetworkManager/dispatcher
 * The _.Xmodmap_ is a configuration file for keybindings to reset the Caps Lock key so it behaves as follows:
     * Functions as Control key normally.
     * With Shift functions as Caps Lock.
+
+* The _konsole.css_ is a CSS file for Konsole terminal emulator to improve the tab display.
