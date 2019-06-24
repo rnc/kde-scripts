@@ -27,8 +27,6 @@ Installation
 
 * The _kerberosKWallet.sh_ script provides integration between KWallet and Kerberos (specifically /usr/bin/kinit). It can be used to automatically 'obtain and cache Kerberos ticket-granting ticket' using passwords from KWallet. The path in KDE Wallet Manager is `Passwords/KerberosWallet`. (Note: You **may** have to create the KerberosWallet entry). Either place this inside `$HOME/.kde4/Autostart` (under KDE4) or utilise _networkPostConfig.sh_ script as described above. This script should automatically ask for the password and if it does not already exist it will write one to that entry. Finally, it will call kinit with the password.
 
-* The _konsoleDownload.sh_ script provides integration between Firefox using the FlashGot downloader and axel/aria2c to open up a new tab in a konsole session. This allows axel/aria2c to perform the downloads (which are much quicker) rather than the Firefox internal mechanism.
-
 * The _.yasp\_script_ is a configuration file for the Yasp plasma applet.
 
 * The _logitech.sh_ is a configuration file to reset a Logitech mouse buttons.
