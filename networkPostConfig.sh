@@ -22,8 +22,8 @@ fi
 if [ -n "$VPN" ] && [ "$2" != "down" ]
 then
     # Any other post-configuration setup
-    echo "Performing mouse and keyboard setup..." >> /tmp/vpn.log
-    $(dirname "$(readlink -f "$0")")/logitech.sh
+    echo "Performing keyboard setup..." >> /tmp/vpn.log
+    # $(dirname "$(readlink -f "$0")")/logitech.sh
     xmodmap /home/$USER/.Xmodmap
 
     # Check if we already have a kerberos ticket ; don't reinit if we do.
