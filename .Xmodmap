@@ -8,3 +8,7 @@
 clear Lock
 keycode 66 = Control_L Caps_Lock Caps_Lock Caps_Lock
 add Control = Control_L
+
+! Override XF86Back / XF86Forward to be Page Down (Prior) and Page Up (Next)
+keycode 166 = Prior
+keycode 167 = Next
