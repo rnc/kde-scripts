@@ -11,7 +11,7 @@ export SSH_ASKPASS=/usr/bin/ksshaskpass
 ssh-add
 
 # Add all others that I can find.
-for i in `find $HOME/.ssh -name "id*" | grep -v "\.pub"`
+for i in `find -L $HOME/.ssh -name "id*" | grep -v "\.pub"`
 do
     ssh-add $i < /dev/null
 done
