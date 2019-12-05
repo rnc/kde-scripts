@@ -42,5 +42,5 @@ fi
 
 if [ "$1" != "-" ]
 then
-    sshfs $U@$1:/home/rnc /mnt/shared
+    sshfs $U@$1:$HOME /mnt/shared
 fi

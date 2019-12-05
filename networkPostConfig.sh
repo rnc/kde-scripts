@@ -18,14 +18,11 @@ then
     echo "Calling again with \"$1\" \"$2\" for \"$VPN\"" >> /tmp/vpn.log
 fi
 
+xmodmap /home/$USER/.Xmodmap
+
 # Only do this if we have a VPN connection and we are not deactivating networks.
 if [ -n "$VPN" ] && [ "$2" != "down" ]
 then
-    # Any other post-configuration setup
-    echo "Performing keyboard setup..." >> /tmp/vpn.log
-    # $(dirname "$(readlink -f "$0")")/logitech.sh
-    xmodmap /home/$USER/.Xmodmap
-
     # Check if we already have a kerberos ticket ; don't reinit if we do.
     echo "Performing kerberos setup..." >> /tmp/vpn.log
     if klist -s
