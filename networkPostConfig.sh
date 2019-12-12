@@ -30,6 +30,7 @@ then
         /bin/notify-send -u normal -t 2000 -i 'network-vpn' 'Plasma' '<b>Kerberos already configured.</b>'
     else
         echo "Configuring kerberos..." >> /tmp/vpn.log
+        $(dirname "$(readlink -f "$0")")/logitech.sh
         $(dirname "$(readlink -f "$0")")/kerberosKWallet.sh
         /bin/notify-send -u normal -t 2000 -i 'network-vpn' 'Plasma' '<b>Finished configuring Kerberos.</b>'
     fi

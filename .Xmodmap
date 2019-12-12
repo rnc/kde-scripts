@@ -1,7 +1,7 @@
 !
 ! Some useful references:
 !
-! xev | grep -A2 --line-buffered '^KeyRelease' | sed -n '/keycode /s/^.*keycode \([0-9]*\).* (.*, \(.*\)).*$/\1 \2/p'
+! xev | egrep -A2 --line-buffered '(^KeyRelease|^ButtonRelease)' | sed -n '/keycode /s/^.*keycode \([0-9]*\).* (.*, \(.*\)).*$/\1 \2/p'
 !
 
 ! Caps_lock is activated through Shift. Otherwise functions as Control.
