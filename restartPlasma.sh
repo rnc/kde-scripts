@@ -8,8 +8,8 @@ notify-send -u critical -t 2000 -i 'security-low' 'KScreen' '<b>Finishing notify
 
 notify-send -u critical -t 5000 -i 'security-low' 'KRunner' '<b>Restarting KRunner...</b>'
 
-kquitapp krunner
-kstart krunner
+kquitapp5 krunner
+kstart5 krunner
 while [ -z "$(pidof krunner)" ]
 do
     sleep 1
@@ -22,8 +22,8 @@ notify-send -u critical -t 5000 -i 'security-low' 'Plasma' '<b>Restarting Plasma
 sleep 2
 
 kbuildsycoca5
-kquitapp plasmashell
-kstart plasmashell
+kquitapp5 plasmashell
+kstart5 plasmashell
 while [ -z "$(pidof plasmashell)" ]
 do
     sleep 1
