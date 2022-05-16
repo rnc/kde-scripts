@@ -17,18 +17,11 @@
 
 echo "Running kerberosKWallet" >> /tmp/vpn.log
 
-# Is this needed?!
-export $(dbus-launch)
-
 KEY=KerberosWallet
-WALLETID=$(qdbus-qt5 org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 $KEY)
-if [ "$?" != 0 ]
-then
-    kdialog --error "Timed out retrieving password ; rerun $0"
-    exit 1
-fi
-echo "Attempting to read wallet password with \"qdbus-qt5 org.kde.kwalletd5 /modules/kwalletd5 readPassword $WALLETID Passwords $KEY $KEY\"" >> /tmp/vpn.log
-PASSWORD=$(qdbus-qt5 org.kde.kwalletd5 /modules/kwalletd5 readPassword $WALLETID Passwords $KEY $KEY)
+
+echo "Attempting to read wallet password with \"kwalletcli -f Passwords -e $KEY\"" >> /tmp/vpn.log
+PASSWORD=$(kwalletcli -f Passwords -e $KEY)
+
 #By default assume that the password was fetched from KDE Wallet
 PASSWORD_FETCHED=-1
 
@@ -66,7 +59,7 @@ then
         kdialog --error "Blank password; unable to run kinit"
         exit 1
     elif [ "$PASSWORD_FETCHED" != "-1" ]; then
-        qdbus-qt5 org.kde.kwalletd5 /modules/kwalletd5 writePassword $WALLETID Passwords $KEY $PASSWORD $KEY
+        kwalletcli -f Passwords -e $KEY -p $PASSWORD
         if [ $? = 1 ]
         then
             kdialog --error "Failed to write password"
