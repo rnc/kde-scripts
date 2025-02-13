@@ -18,7 +18,7 @@ then
     echo "Calling again with \"$1\" \"$2\" for \"$VPN\"" >> /tmp/vpn.log
 fi
 
-xmodmap /home/$USER/.Xmodmap
+# xmodmap /home/$USER/.Xmodmap
 
 # Only do this if we have a VPN connection and we are not deactivating networks.
 if [ -n "$VPN" ] && [ "$2" != "down" ]

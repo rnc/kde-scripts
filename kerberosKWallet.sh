@@ -1,12 +1,24 @@
 #!/bin/sh
 #
 # Place this script in your KDE Autostart folder and it will automatically run
-# /usr/bin/kinit using passwords from kwallet.  Alternatively use KDE event
-# notifications to run this (or a wrapper) as a script.
+# /usr/bin/kinit using passwords from kwallet. Alternatively for Plasms 5, use
+# KDE event notifications to run this (or a wrapper) as a script. For Plasma 6
+# use a script within /etc/NetworkManager/dispatcher.d e.g.
+#
+# #!/bin/bash
+# IF=$1
+# STATUS=$2
+# LOG='/var/log/NetworkManager_dispatcher.d.log'
+# echo "$(date +"%F %T") Called with ($*) and connection uuid is: ${CONNECTION_UUID}" > ${LOG}
+# if [ "$1" = "tun0" ] && [ "$2" = "up" ] ; then
+#     echo "VPN is up!" >> ${LOG}
+#     sudo --non-interactive --set-home -u rnc /home/rnc/bin/kerberosKWallet.sh >> ${LOG}
+# fi
+#
+#
 # By default this will use $USER as the id for kinit. To use an alternative ID
 # create a $HOME/.kerberoskwallet containing
 # USER=<id>
-#
 #
 #
 # Nick Cross
@@ -14,11 +26,14 @@
 # Credits : found a lot here
 # http://learnonthejob.blogspot.com/2009/11/accessing-kde-wallet-from-cmdline.html
 #
+echo "Running kerberosKWallet" > /tmp/vpn.log
 
-echo "Running kerberosKWallet" >> /tmp/vpn.log
-
-# Is this needed?!
-export $(dbus-launch)
+# https://unix.stackexchange.com/questions/28463/run-a-dbus-program-in-crontab-how-to-know-about-the-session-id
+dbus_session_file=~/.dbus/session-bus/$(cat /var/lib/dbus/machine-id)-0
+if [ -e "$dbus_session_file" ]; then
+  . "$dbus_session_file"
+  export DBUS_SESSION_BUS_ADDRESS DBUS_SESSION_BUS_PID
+fi
 
 KEY=KerberosWallet
 WALLETID=$(qdbus-qt5 org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 $KEY)
