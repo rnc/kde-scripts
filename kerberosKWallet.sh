@@ -27,13 +27,11 @@
 # http://learnonthejob.blogspot.com/2009/11/accessing-kde-wallet-from-cmdline.html
 #
 echo "Running kerberosKWallet" > /tmp/vpn.log
+echo "Using user $(id) with ID $(id -u)" >> /tmp/vpn.log
 
-# https://unix.stackexchange.com/questions/28463/run-a-dbus-program-in-crontab-how-to-know-about-the-session-id
-dbus_session_file=~/.dbus/session-bus/$(cat /var/lib/dbus/machine-id)-0
-if [ -e "$dbus_session_file" ]; then
-  . "$dbus_session_file"
-  export DBUS_SESSION_BUS_ADDRESS DBUS_SESSION_BUS_PID
-fi
+export DISPLAY=:0
+export XDG_RUNTIME_DIR=/run/user/$(id -u)
+export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
 
 KEY=KerberosWallet
 WALLETID=$(qdbus-qt5 org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 $KEY)
@@ -90,4 +88,5 @@ then
     kinit -A "$KUSER" &> /dev/null <<EOF 3>&1 1>&2 2>&3 | checkKinit
 $PASSWORD
 EOF
+    notify-send "Kerberos configured till $(klist | grep krbtgt | awk '{print $3 " " $4}')"
 fi
