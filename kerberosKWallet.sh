@@ -29,6 +29,8 @@
 echo "Running kerberosKWallet" > /tmp/vpn.log
 echo "Using user $(id) with ID $(id -u)" >> /tmp/vpn.log
 
+# Previously using https://unix.stackexchange.com/questions/28463/run-a-dbus-program-in-crontab-how-to-know-about-the-session-id
+# but that doesn't allow notify-send to work so switched to using the below.
 export DISPLAY=:0
 export XDG_RUNTIME_DIR=/run/user/$(id -u)
 export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
